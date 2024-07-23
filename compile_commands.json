@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/talksik-desktop/code/flowy-tings/sapling/alsa-test/build",
+  "command": "/usr/bin/c++   -g -std=gnu++17 -o CMakeFiles/AlsaTest.dir/src/main.cpp.o -c /home/talksik-desktop/code/flowy-tings/sapling/alsa-test/src/main.cpp",
+  "file": "/home/talksik-desktop/code/flowy-tings/sapling/alsa-test/src/main.cpp"
+}
+]
