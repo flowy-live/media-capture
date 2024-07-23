@@ -1,5 +1,4 @@
 #include <alsa/asoundlib.h>
-#include <iostream>
 
 typedef struct WAVHeader
 {
