@@ -128,7 +128,7 @@ int test_loopback_audio()
 {
     const char *capture_device = "default";  // ALSA capture device
     const char *playback_device = "default"; // ALSA playback device
-    unsigned int rate = 44100;               // Sample rate
+    unsigned int sampling_rate = 44100;               // Sample rate
     int channels = 2;                        // Number of channels
     int buffer_frames = 128;                 // Buffer size in frames
     int duration = 10;                       // Recording duration in seconds
@@ -153,7 +153,7 @@ int test_loopback_audio()
         return 1;
     }
 
-    if ((err = snd_pcm_set_params(playback_handle, SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED, channels, rate, 1, 500000)) < 0)
+    if ((err = snd_pcm_set_params(playback_handle, SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED, channels, sampling_rate, 1, 500000)) < 0)
     {
         fprintf(stderr, "Playback open error: %s\n", snd_strerror(err));
         return 1;
@@ -166,15 +166,18 @@ int test_loopback_audio()
     // Set hardware parameters
     snd_pcm_hw_params_set_access(capture_handle, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED);
     snd_pcm_hw_params_set_format(capture_handle, hw_params, SND_PCM_FORMAT_S16_LE);
-    snd_pcm_hw_params_set_rate_near(capture_handle, hw_params, &rate, 0);
+    snd_pcm_hw_params_set_rate_near(capture_handle, hw_params, &sampling_rate, 0);
     snd_pcm_hw_params_set_channels(capture_handle, hw_params, channels);
     snd_pcm_hw_params(capture_handle, hw_params);
 
     // Allocate buffer
     buffer = (char *)malloc(buffer_frames * channels * 2); // 2 bytes/sample
+    int num_frames_per_second = sampling_rate / buffer_frames;
+    int total_num_frames_to_read = duration * num_frames_per_second;
+
 
     // Start capture and playback
-    for (int i = 0; i < duration * rate / buffer_frames; ++i)
+    for (int i = 0; i < total_num_frames_to_read; ++i)
     {
         if ((err = snd_pcm_readi(capture_handle, buffer, buffer_frames)) < 0)
         {
