@@ -83,7 +83,7 @@ int test_record_to_wav()
         return 1;
     }
 
-    // Write WAV header placeholder
+    // Write WAV header
     write_wav_header(file, rate, channels, 16, 0);
 
     // Record audio
